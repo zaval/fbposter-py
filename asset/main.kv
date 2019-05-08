@@ -1,0 +1,245 @@
+#:import MDNavigationDrawer kivymd.navigationdrawer.MDNavigationDrawer
+#:import NavigationLayout kivymd.navigationdrawer.NavigationLayout
+#:import NavigationDrawerToolbar kivymd.navigationdrawer.NavigationDrawerToolbar
+#:import MDTextField kivymd.textfields.MDTextField
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import colors kivymd.color_definitions.colors
+#:import MDProgressBar kivymd.progressbar.MDProgressBar
+
+NavigationLayout:
+  id: nav_layout
+  MDNavigationDrawer:
+    id: nav_drawer
+    NavigationDrawerToolbar:
+      title: "FB Poster"
+    NavigationDrawerIconButton:
+      icon: 'checkbox-blank-circle'
+      text: "Страницы"
+      on_release: app.root.ids.scr_mngr.current = 'pages'
+    NavigationDrawerIconButton:
+      icon: 'checkbox-blank-circle'
+      text: "Повторы"
+      on_release: app.root.ids.scr_mngr.current = 'posts'
+    NavigationDrawerIconButton:
+      icon: 'checkbox-blank-circle'
+      text: "Видео"
+      on_release: app.root.ids.scr_mngr.current = 'video'
+    NavigationDrawerIconButton:
+      icon: 'checkbox-blank-circle'
+      text: "Логи"
+      on_release: app.root.ids.scr_mngr.current = 'logs'
+  BoxLayout:
+    orientation: 'vertical'
+    Toolbar:
+      id: toolbar
+      title: "Facebook Poster"
+      md_bg_color: app.theme_cls.primary_color
+      background_palette: 'Primary'
+      background_hue: '500'
+      left_action_items: [['menu', lambda x: app.root.toggle_nav_drawer()]]
+    ScreenManager:
+      id: scr_mngr
+      Screen:
+        name: 'pages'
+        ScrollView:
+          do_scroll_x: False
+          GridLayout:
+            cols: 4
+            id: pages_grid
+            row_default_height: dp(200)
+            row_force_default: True
+            size_hint_y: None
+            col_default_width: dp(200)
+            col_force_default: True
+            size_hint_x: None
+            width: self.minimum_width
+            height: self.minimum_height
+            padding: dp(10), dp(10)
+            spacing: dp(10)
+        MDFloatingActionButton:
+          id: float_act_btn
+          icon: 'plus'
+          opposite_colors: True
+          elevation_normal: 8
+          right: dp(48)
+          bottom: dp(48)
+          pos_hint: {'center_x': 0.9, 'center_y': 0.1}
+          on_release: app.root.ids.scr_mngr.current = 'add_page'
+      Screen:
+        name: 'add_page'
+        ScrollView:
+          BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(48)
+            spacing: 10
+            MDTextField:
+              hint_text: "Название"
+              required: True
+              helper_text_mode: "on_error"
+              id: add_page_name
+            MDTextField:
+              hint_text: "Ссылка"
+              required: True
+              helper_text_mode: "on_error"
+              id: add_page_link
+            MDTextField:
+              hint_text: "ID группы"
+              required: True
+              helper_text_mode: "on_error"
+              id: add_page_id
+            MDTextField:
+              hint_text: "Token"
+              id: add_page_token
+            MDRaisedButton:
+              size_hint: None, None
+              size: 3 * dp(48), dp(48)
+              center_x: self.parent.center_x
+              text: 'Добавить'
+              opposite_colors: True
+              pos_hint: {'center_x': 0.5}
+              on_release: app.add_page()
+      Screen:
+        name: 'page_details'
+        id: page_details
+        ScrollView:
+          BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(48)
+            spacing: 10
+            MDTextField:
+              hint_text: "Название"
+              id: details_page_name
+            MDTextField:
+              hint_text: "Ссылка"
+              id: details_page_link
+            MDTextField:
+              hint_text: "ID группы"
+              id: details_page_id
+            MDTextField:
+              hint_text: "Token"
+              id: details_page_token
+            MDTextField:
+              multiline: True
+              hint_text: "Расписание"
+              helper_text: "00:00 00:30 02:00"
+              helper_text_mode: "persistent"
+              id: details_page_times
+            MDRaisedButton:
+              id: details_page_open_file
+              size_hint: None, None
+              size: 2 * dp(48), dp(48)
+              pos_hint: {'center_y': .5, 'center_x': .5}
+              text: 'Черновики'
+              on_release: app.open_file_dialog()
+            MDProgressBar:
+              value: app.drafts_progress
+            BoxLayout:
+              orientation: 'horizontal'
+              size_hint_x: dp(48)
+              width: root.width
+              padding: dp(48)
+              spacing: 10
+              MDRaisedButton:
+                size_hint: None, None
+                size: 3 * dp(48), dp(48)
+                # center_y: self.parent.center_y
+                pos_hint: {'center_y': 1}
+                text: 'Старт черновики'
+                on_release: app.start_drafts()
+                id: start_drafts
+              MDRaisedButton:
+                size_hint: None, None
+                size: 3 * dp(48), dp(48)
+                # center_y: self.parent.center_y
+                pos_hint: {'center_y': 1}
+                text: 'Старт планирование'
+                on_release: app.start_schedule()
+                id: start_schedule
+              MDIconButton:
+                size_hint: None, None
+                # size: 3 * dp(48), dp(48)
+                icon: 'delete'
+                pos_hint: {'center_y': 1}
+                # color: [0, 255, 0, 0]
+                on_release: app.delete_page()
+      Screen:
+        name: 'logs'
+        ScrollView:
+          BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: root.height
+            padding: dp(48)
+            spacing: 10
+            MDTextField:
+              id: log_text
+              multiline: True
+              hint_text: app.log_text
+      Screen:
+        name: 'video'
+        id: video
+        ScrollView:
+          BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(48)
+            spacing: 10
+            MDTextField:
+              id: video_links
+              hint_text: 'Ссылки на видео'
+              multiline: True
+            MDRaisedButton:
+              id: video_start
+              size_hint: None, None
+              size: 2 * dp(48), dp(48)
+              pos_hint: {'center_y': .5, 'center_x': .5}
+              text: 'Скачать'
+              on_release: app.download_video()
+            MDProgressBar:
+              value: app.video_progress
+      Screen:
+        name: 'posts'
+        id: posts
+        ScrollView:
+          BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(48)
+            spacing: 10
+            MDTextField:
+              id: post_links
+              hint_text: 'Ссылки на посты'
+              multiline: True
+            MDRaisedButton:
+              id: posts_start
+              size_hint: None, None
+              size: 2 * dp(48), dp(48)
+              pos_hint: {'center_y': .5, 'center_x': .5}
+              text: 'Конвертировать'
+              on_release: app.download_posts()
+            MDProgressBar:
+              value: app.posts_progress
+<LoadDialog>:
+  BoxLayout:
+    size: root.size
+    pos: root.pos
+    orientation: "vertical"
+    FileChooserIconView:
+      id: filechooser
+      path: app.pwd
+    BoxLayout:
+      size_hint_y: None
+      height: 30
+      spacing: 30
+      Button:
+        text: "Отмена"
+        on_release: app.dismiss_popup()
+      Button:
+        text: "Открыть"
+        on_release: app.load_file(filechooser.path, filechooser.selection)
