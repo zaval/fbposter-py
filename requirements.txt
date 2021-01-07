@@ -11,7 +11,7 @@ jedi==0.13.3
 Kivy==1.10.1
 Kivy-Garden==0.1.4
 kivymd==0.1.2
-lxml==4.2.5
+lxml==4.6.2
 parso==0.4.0
 pathtools==0.1.2
 Pygments==2.3.1
