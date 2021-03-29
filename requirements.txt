@@ -14,7 +14,7 @@ kivymd==0.1.2
 lxml==4.2.5
 parso==0.4.0
 pathtools==0.1.2
-Pygments==2.3.1
+Pygments==2.7.4
 PySocks==1.6.8
 PyYAML==5.1
 requests==2.20.0
