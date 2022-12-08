@@ -1,6 +1,6 @@
 argh==0.26.2
 beautifulsoup4==4.6.3
-certifi==2018.10.15
+certifi==2022.12.7
 chardet==3.0.4
 Cython==0.29.7
 docutils==0.14
